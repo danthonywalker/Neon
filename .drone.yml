@@ -1,0 +1,15 @@
+pipeline:
+  build:
+    image: maven
+    pull: true
+    commands:
+      - mvn package
+
+  release:
+    image: plugins/docker
+    pull: true
+    secrets: [ docker_username, docker_password ]
+    repo: danthonywalker/neon
+    tags: latest
+    build_args:
+      - NEON_JAR=./target/neon.jar
