@@ -1,4 +1,4 @@
-FROM openjdk:alpine
+FROM openjdk
 WORKDIR /etc/neon
 EXPOSE 8080
 

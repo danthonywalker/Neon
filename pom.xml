@@ -34,17 +34,38 @@
     </parent>
 
     <properties>
-        <kotlin.version>1.2.51</kotlin.version>
+        <kotlin.version>1.2.60</kotlin.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -55,6 +76,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.discord4j.discord4j</groupId>
+            <artifactId>discord4j-core</artifactId>
+            <version>d48ac821b0</version>
         </dependency>
     </dependencies>
 
@@ -78,6 +105,7 @@
                     <args>
                         <arg>-Xjsr305=strict</arg>
                     </args>
+
                     <compilerPlugins>
                         <plugin>spring</plugin>
                     </compilerPlugins>
@@ -92,5 +120,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
