@@ -18,10 +18,9 @@ package technology.yockto.neon.web.rest.channel
 
 import reactor.core.publisher.Mono
 import technology.yockto.neon.db.document.ChannelDocument
-import java.math.BigInteger
 
 @Suppress("KDocMissingDocumentation")
 interface EventListener {
 
-    fun execute(id: BigInteger, request: EventRequest, channelDocument: ChannelDocument): Mono<Void>
+    fun execute(request: EventRequest, channelDocument: ChannelDocument): Mono<Void>
 }

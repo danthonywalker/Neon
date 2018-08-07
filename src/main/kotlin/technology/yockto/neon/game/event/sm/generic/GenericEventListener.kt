@@ -28,7 +28,6 @@ import technology.yockto.neon.game.GameType.TEAM_FORTRESS_2
 import technology.yockto.neon.util.format
 import technology.yockto.neon.web.rest.channel.EventListener
 import technology.yockto.neon.web.rest.channel.EventRequest
-import java.math.BigInteger
 
 @Component
 @Suppress("KDocMissingDocumentation")
@@ -37,8 +36,8 @@ class GenericEventListener @Autowired constructor(
     private val objectMapper: ObjectMapper
 ) : EventListener {
 
-    override fun execute(id: BigInteger, request: EventRequest, channelDocument: ChannelDocument): Mono<Void> {
-        // TODO Possibly clean this up. Maybe allow the type to dynamically lookup and execute required method
+    override fun execute(request: EventRequest, channelDocument: ChannelDocument): Mono<Void> {
+        // TODO Possibly clean this up. Maybe allow "type" to lookup / execute required method
 
         return Mono.just(request)
             .filter { it.type == "GENERIC" }
@@ -46,7 +45,7 @@ class GenericEventListener @Autowired constructor(
             .flatMap { Mono.justOrEmpty(getRawString(channelDocument, request)?.let(it::format)) }
             .flatMapMany { message ->
                 Flux.fromIterable(discordClients)
-                    .flatMap { it.getMessageChannelById(Snowflake.of(id)) }
+                    .flatMap { it.getMessageChannelById(Snowflake.of(channelDocument.id)) }
                     .flatMap { it.createMessage(message) }
             }.then()
     }

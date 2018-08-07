@@ -74,7 +74,7 @@ class ChannelRestController @Autowired constructor(
     fun postEvent(@PathVariable("id") id: BigInteger, request: EventRequest): Mono<Void> {
         val executors: (ChannelDocument) -> Flux<Void> = { channelDocument ->
             Flux.fromIterable(eventListeners) // Ordering is not considered
-                .flatMap { it.execute(id, request, channelDocument) }
+                .flatMap { it.execute(request, channelDocument) }
         }
 
         return Mono.just(id)
