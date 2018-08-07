@@ -33,7 +33,7 @@ class DiscordConfiguration {
     fun getDiscordClients(
         @Value("\${DISCORD_SHARD_COUNT:1}") discordShardCount: Int,
         @Value("\${DISCORD_TOKEN}") discordToken: String,
-        eventListeners: Iterable<EventListener<*>>
+        eventListeners: List<EventListener<*>>
     ): Iterable<DiscordClient> {
 
         @Suppress("UNCHECKED_CAST")

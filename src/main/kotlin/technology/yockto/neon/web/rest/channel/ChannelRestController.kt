@@ -39,8 +39,8 @@ import java.util.concurrent.LinkedBlockingQueue
 @Suppress("KDocMissingDocumentation")
 class ChannelRestController @Autowired constructor(
     @Value("\${NEON_QUEUE_TIMEOUT:10000}") private val queueTimeout: Int,
-    private val eventListeners: Iterable<EventListener>,
-    private val channelRepository: ChannelRepository
+    private val channelRepository: ChannelRepository,
+    private val eventListeners: List<EventListener>
 ) {
 
     private val checkpoints = ConcurrentHashMap<BigInteger, Instant>()
