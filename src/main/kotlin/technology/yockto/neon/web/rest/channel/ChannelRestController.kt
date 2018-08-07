@@ -38,7 +38,7 @@ import java.util.concurrent.LinkedBlockingQueue
 @RequestMapping("/channels/{id}")
 @Suppress("KDocMissingDocumentation")
 class ChannelRestController @Autowired constructor(
-    @Value("NEON_QUEUE_TIMEOUT:10000") private val queueTimeout: Int,
+    @Value("\${NEON_QUEUE_TIMEOUT:10000}") private val queueTimeout: Int,
     private val eventListeners: Iterable<EventListener>,
     private val channelRepository: ChannelRepository
 ) {
