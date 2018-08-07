@@ -18,6 +18,7 @@ package technology.yockto.neon.game.checkpoint
 
 import discord4j.core.event.domain.Event
 import org.reactivestreams.Publisher
+import org.springframework.beans.factory.BeanFactory
 import org.springframework.beans.factory.annotation.Autowired
 import reactor.core.publisher.Mono
 import technology.yockto.neon.db.document.ChannelDocument
@@ -32,12 +33,14 @@ import java.util.Queue
 abstract class CheckpointEventListener<T : Event> : EventListener<T> {
 
     @Autowired
-    private lateinit var queues: Map<BigInteger, Queue<CheckpointResponse>>
-
-    @Autowired
     private lateinit var channelRepository: ChannelRepository
 
+    @Autowired
+    private lateinit var beanFactory: BeanFactory
+
     final override fun apply(t: T): Publisher<*> {
+        @Suppress("UNCHECKED_CAST") // This is needed because of a circular bean dependency chain
+        val queues = beanFactory.getBean("queues") as Map<BigInteger, Queue<CheckpointResponse>>
         val channelId = getChannelId(t)
 
         return Mono.just(channelId)

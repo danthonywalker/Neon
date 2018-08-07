@@ -45,7 +45,7 @@ class ChannelRestController @Autowired constructor(
 
     private val checkpoints = ConcurrentHashMap<BigInteger, Instant>()
     private val privateQueues = ConcurrentHashMap<BigInteger, Queue<CheckpointResponse>>()
-    val queues: Map<BigInteger, Queue<CheckpointResponse>> @Bean get() = privateQueues
+    val queues: Map<BigInteger, Queue<CheckpointResponse>> @Bean("queues") get() = privateQueues
 
     @PostMapping("/checkpoint")
     fun postCheckpoint(@PathVariable("id") id: BigInteger): Flux<CheckpointResponse> {
