@@ -1,4 +1,4 @@
-FROM openjdk
+FROM openjdk:slim
 WORKDIR /etc/neon
 EXPOSE 8080
 

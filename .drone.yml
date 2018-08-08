@@ -1,6 +1,6 @@
 pipeline:
   build:
-    image: maven
+    image: maven:3-jdk-10-slim
     pull: true
     commands:
       - mvn package
