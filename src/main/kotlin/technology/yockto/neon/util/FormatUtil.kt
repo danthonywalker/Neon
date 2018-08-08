@@ -17,6 +17,10 @@
 package technology.yockto.neon.util
 
 import technology.yockto.neon.web.rest.channel.EventRequest
+import java.math.RoundingMode.HALF_UP
+
+@Suppress("KDocMissingDocumentation")
+fun Double.round(scale: Int): Double = toBigDecimal().setScale(scale, HALF_UP).toDouble()
 
 @Suppress("KDocMissingDocumentation")
 fun EventRequest.format(raw: String): String = format(raw, "", payload)

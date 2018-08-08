@@ -22,6 +22,7 @@ import discord4j.core.event.domain.message.MessageCreateEvent
 import discord4j.core.util.VersionUtil
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
+import technology.yockto.neon.util.round
 import java.awt.Color
 import java.lang.management.ManagementFactory
 import java.time.Duration
@@ -52,26 +53,29 @@ class AboutCommand : NeonCommand {
                         val nanos = "${uptime.toNanosPart()}ns"
 
                         val processors = "Processors: ${os.availableProcessors}"
-                        val jvmCpuUsage = "JVM: ${os.processCpuLoad * 100}%"
-                        val systemCpuUsage = "System: ${os.systemCpuLoad * 100}%"
+                        val systemCpuUsage = "System: ${(os.systemCpuLoad * 100).round(2)}%"
+                        val jvmCpuUsage = "JVM: ${(os.processCpuLoad * 100).round(2)}%"
 
-                        val totalSystem = os.totalPhysicalMemorySize
-                        val freeSystem = os.freePhysicalMemorySize
-                        val totalJvm = runtime.totalMemory()
-                        val freeJvm = runtime.freeMemory()
+                        val totalSystem = os.totalPhysicalMemorySize.toDouble()
+                        val freeSystem = os.freePhysicalMemorySize.toDouble()
+                        val usedSystem = totalSystem - freeSystem
+                        val usedSystemPercent = ((usedSystem / totalSystem) * 100).round(2)
 
-                        val usedSystem = ((totalSystem - freeSystem) / totalSystem) * 100
-                        val usedJvm = ((totalJvm - freeJvm) / totalJvm) * 100
+                        val totalJvm = runtime.totalMemory().toDouble()
+                        val freeJvm = runtime.freeMemory().toDouble()
+                        val usedJvm = totalJvm - freeJvm
+                        val usedJvmPercent = ((usedJvm / totalJvm) * 100).round(2)
 
-                        val systemRam = "System: ${totalSystem * 1_000_000}MB ($usedSystem% Used)"
-                        val jvmRam = "JVM: ${totalJvm * 1_000_000}MB ($usedJvm% Used)"
+                        val totalRam = "Total RAM: ${(totalSystem / 1_000_000).round(2)}MB"
+                        val systemRam = "System: ${(usedSystem / 1_000_000).round(2)}MB ($usedSystemPercent% Used)"
+                        val jvmRam = "JVM: ${(usedJvm / 1_000_000).round(2)}MB ($usedJvmPercent% Used)"
 
                         it.addField("Author", "danthonywalker#5512", true)
-                        it.addField("Powered By", "Discord4J (${VersionUtil.GIT_COMMIT_ID})", true)
+                        it.addField("Powered By", "Discord4J (${VersionUtil.APPLICATION_VERSION})", true)
                         it.addField("Operating System", "${os.name}-${os.arch}-${os.version}", true)
                         it.addField("Uptime", "$days $hours $minutes $seconds $millis $nanos", true)
                         it.addField("CPU Usage", "$processors\n$systemCpuUsage\n$jvmCpuUsage", true)
-                        it.addField("RAM Usage", "$systemRam\n$jvmRam", true)
+                        it.addField("RAM Usage", "$totalRam\n$systemRam\n$jvmRam", true)
 
                         it.addField("Privacy Policy", "By inviting Neon to your Guild, or by interacting with " +
                             "Features provided by Neon, then you agree to the collection and use of Information " +

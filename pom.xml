@@ -59,7 +59,7 @@
             <!-- CorruptedFrameException Solved in Discord4J -->
             <exclusions>
                 <exclusion>
-                    <groupId>io.projectreactor.ipc</groupId>
+                    <groupId>io.projectreactor.netty</groupId>
                     <artifactId>reactor-netty</artifactId>
                 </exclusion>
             </exclusions>
