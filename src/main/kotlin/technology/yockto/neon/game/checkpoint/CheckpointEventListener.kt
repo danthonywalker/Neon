@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import reactor.core.publisher.Mono
 import technology.yockto.neon.db.document.ChannelDocument
 import technology.yockto.neon.db.repository.ChannelRepository
-import technology.yockto.neon.discord.EventListener
+import technology.yockto.neon.discord.event.EventListener
 import technology.yockto.neon.game.GameType.UNSPECIFIED
 import technology.yockto.neon.web.rest.channel.CheckpointResponse
 import java.math.BigInteger

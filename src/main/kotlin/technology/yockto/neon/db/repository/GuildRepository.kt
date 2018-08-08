@@ -14,17 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.discord
+package technology.yockto.neon.db.repository
 
-import discord4j.core.event.domain.Event
-import org.reactivestreams.Publisher
-import org.springframework.core.GenericTypeResolver
-import java.util.function.Function
+import org.springframework.data.repository.reactive.ReactiveCrudRepository
+import technology.yockto.neon.db.document.GuildDocument
+import java.math.BigInteger
 
 @Suppress("KDocMissingDocumentation")
-interface EventListener<T : Event> : Function<T, Publisher<*>> {
-
-    @Suppress("UNCHECKED_CAST")
-    val eventType: Class<T>
-        get() = GenericTypeResolver.resolveTypeArgument(javaClass, EventListener::class.java) as Class<T>
-}
+interface GuildRepository : ReactiveCrudRepository<GuildDocument, BigInteger>

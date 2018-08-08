@@ -14,13 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.web.rest.channel
+package technology.yockto.neon.db.document
 
-import org.reactivestreams.Publisher
-import technology.yockto.neon.db.document.ChannelDocument
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
+import java.math.BigInteger
 
+@Document(collection = "guild")
 @Suppress("KDocMissingDocumentation")
-interface EventListener {
-
-    fun execute(request: EventRequest, channelDocument: ChannelDocument): Publisher<*>
-}
+data class GuildDocument(
+    @Id val id: BigInteger,
+    val prefixes: List<String> = listOf("/")
+)

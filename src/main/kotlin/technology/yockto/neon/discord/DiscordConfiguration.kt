@@ -16,12 +16,15 @@
  */
 package technology.yockto.neon.discord
 
+import discord4j.command.CommandBootstrapper
+import discord4j.command.CommandProvider
 import discord4j.core.DiscordClient
 import discord4j.core.DiscordClientBuilder
 import discord4j.core.event.domain.Event
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import technology.yockto.neon.discord.event.EventListener
 import java.util.stream.IntStream
 import kotlin.streams.toList
 
@@ -33,20 +36,23 @@ class DiscordConfiguration {
     fun getDiscordClients(
         @Value("\${DISCORD_SHARD_COUNT:1}") discordShardCount: Int,
         @Value("\${DISCORD_TOKEN}") discordToken: String,
-        eventListeners: List<EventListener<*>>
+        eventListeners: List<EventListener<*>>,
+        commandProvider: CommandProvider
     ): Iterable<DiscordClient> {
 
         @Suppress("UNCHECKED_CAST")
         fun DiscordClient.registerEventListeners() = eventListeners.map { it as EventListener<Event> }.forEach {
-            eventDispatcher.on(it.eventType).flatMap(it::apply).subscribe() // Registers listeners to all shards
+            eventDispatcher.on(it.eventType).flatMap(it::apply).onErrorContinue().subscribe() // Infinite Fluxes
         }
 
         val discordClientBuilder = DiscordClientBuilder(discordToken).setShardCount(discordShardCount)
+        val commandBootstrapper = CommandBootstrapper().addCommandProvider(commandProvider)
 
         return IntStream.range(0, discordShardCount)
             .mapToObj(discordClientBuilder::setShardIndex)
             .map(DiscordClientBuilder::build)
             .peek(DiscordClient::registerEventListeners)
+            .peek { commandBootstrapper.attach(it).subscribe() }
             .peek { it.login().subscribe() }
             .toList()
     }

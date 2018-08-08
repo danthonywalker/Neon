@@ -28,6 +28,7 @@ import java.util.UUID
 @Suppress("KDocMissingDocumentation")
 data class ChannelDocument(
     @Id val id: BigInteger,
+    val owner: BigInteger,
     val password: UUID = UUID.randomUUID(),
 
     val gameType: GameType = UNSPECIFIED,

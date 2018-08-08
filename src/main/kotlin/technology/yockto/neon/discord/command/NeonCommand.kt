@@ -14,13 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.web.rest.channel
+package technology.yockto.neon.discord.command
 
-import org.reactivestreams.Publisher
-import technology.yockto.neon.db.document.ChannelDocument
+import discord4j.command.Command
 
 @Suppress("KDocMissingDocumentation")
-interface EventListener {
+interface NeonCommand : Command {
 
-    fun execute(request: EventRequest, channelDocument: ChannelDocument): Publisher<*>
+    val aliases: Set<String>
+
+    fun getArguments(content: String): List<String> {
+        return content.split(" ") // Drop prefix until alias hits
+            .dropWhile { prefix -> aliases.none(prefix::equals) }
+            .drop(1)
+    }
 }

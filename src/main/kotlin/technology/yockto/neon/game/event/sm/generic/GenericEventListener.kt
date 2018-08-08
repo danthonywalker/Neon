@@ -19,6 +19,7 @@ package technology.yockto.neon.game.event.sm.generic
 import com.fasterxml.jackson.databind.ObjectMapper
 import discord4j.core.DiscordClient
 import discord4j.core.`object`.util.Snowflake
+import org.reactivestreams.Publisher
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
@@ -36,8 +37,8 @@ class GenericEventListener @Autowired constructor(
     private val objectMapper: ObjectMapper
 ) : EventListener {
 
-    override fun execute(request: EventRequest, channelDocument: ChannelDocument): Mono<Void> {
-        // TODO Possibly clean this up. Maybe allow "type" to lookup / execute required method
+    override fun execute(request: EventRequest, channelDocument: ChannelDocument): Publisher<*> {
+        // TODO Possibly clean this up. Maybe allow the type to lookup / execute required method
 
         return Mono.just(request)
             .filter { it.type == "GENERIC" }
@@ -47,7 +48,7 @@ class GenericEventListener @Autowired constructor(
                 Flux.fromIterable(discordClients)
                     .flatMap { it.getMessageChannelById(Snowflake.of(channelDocument.id)) }
                     .flatMap { it.createMessage(message) }
-            }.then()
+            }
     }
 
     private fun getRawString(channelDocument: ChannelDocument, request: EventRequest) = when (request.type) {
