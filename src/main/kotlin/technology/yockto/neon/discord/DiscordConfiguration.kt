@@ -24,6 +24,8 @@ import discord4j.core.event.domain.Event
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import reactor.util.Logger
+import reactor.util.Loggers
 import technology.yockto.neon.discord.event.EventListener
 import java.util.stream.IntStream
 import kotlin.streams.toList
@@ -40,19 +42,26 @@ class DiscordConfiguration {
         commandProvider: CommandProvider
     ): Iterable<DiscordClient> {
 
+        val logger = Loggers.getLogger(DiscordConfiguration::class.java)
+        fun Logger.consumeError(error: Throwable, value: Any?) = warn(value.toString(), error)
+
         @Suppress("UNCHECKED_CAST")
         fun DiscordClient.registerEventListeners() = eventListeners.map { it as EventListener<Event> }.forEach {
-            eventDispatcher.on(it.eventType).flatMap(it::apply).onErrorContinue().subscribe() // Infinite Fluxes
+            eventDispatcher.on(it.eventType).flatMap(it::apply).onErrorContinue(logger::consumeError).subscribe()
         }
 
         val discordClientBuilder = DiscordClientBuilder(discordToken).setShardCount(discordShardCount)
         val commandBootstrapper = CommandBootstrapper().addCommandProvider(commandProvider)
 
+        fun DiscordClient.attachCommandBootstrapper() { // Prevent EventDispatcher error death
+            commandBootstrapper.attach(this).onErrorContinue(logger::consumeError).subscribe()
+        }
+
         return IntStream.range(0, discordShardCount)
             .mapToObj(discordClientBuilder::setShardIndex)
             .map(DiscordClientBuilder::build)
             .peek(DiscordClient::registerEventListeners)
-            .peek { commandBootstrapper.attach(it).subscribe() }
+            .peek(DiscordClient::attachCommandBootstrapper)
             .peek { it.login().subscribe() }
             .toList()
     }
