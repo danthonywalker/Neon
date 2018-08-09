@@ -92,7 +92,7 @@
         <dependency>
             <groupId>com.discord4j.discord4j</groupId>
             <artifactId>discord4j-command</artifactId>
-            <version>cc22a373ec</version>
+            <version>7399a87781</version>
         </dependency>
     </dependencies>
 

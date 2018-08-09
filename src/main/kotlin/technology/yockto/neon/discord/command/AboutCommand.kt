@@ -50,7 +50,7 @@ class AboutCommand : NeonCommand {
                         val minutes = "${uptime.toMinutesPart()}m"
                         val seconds = "${uptime.toSecondsPart()}s"
                         val millis = "${uptime.toMillisPart()}ms"
-                        val nanos = "${uptime.toNanosPart()}ns"
+                        val nanos = "${uptime.toNanosPart() / 1000}ns"
 
                         val processors = "Processors: ${os.availableProcessors}"
                         val systemCpuUsage = "System: ${(os.systemCpuLoad * 100).round(2)}%"
@@ -85,6 +85,7 @@ class AboutCommand : NeonCommand {
                             "statistical Information such as message count and/or guild count. Users may request to " +
                             "view and/or delete their Information at any time (see Help command for details).", false)
 
+                        it.setFooter("Neon Midori Network", "http://neonmidori.net/images/theomnipresentglobe.png")
                         it.setDescription("A Discord Bot Gaming Bridge for the Neon Midori Network")
                         it.setAuthor(authorName, "https://neon.yockto.technology/", avatarUrl)
                         it.setTimestamp(Instant.now())
