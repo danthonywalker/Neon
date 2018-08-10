@@ -83,7 +83,7 @@ class AboutCommand : NeonCommand {
                         "providing and improving the Service. Neon will not use or share your Information with " +
                         "anyone unless required by Law.\nNeon will never collect message texts, but may collect " +
                         "statistical Information such as message count and/or guild count. Users may request to " +
-                        "view and/or delete their Information at any time (see Help command for details).", false)
+                        "view and/or delete their Information at any time (use **/help** for details).", false)
 
                     it.setDescription("A Discord Bot Gaming Bridge for the Neon Midori Network")
                     it.setColor(Color.CYAN)

@@ -61,8 +61,10 @@ class LinkCommand @Autowired constructor(
                             it.setDescription("Your generated token for ${channel.mention} is **$token**. If your " +
                                 "token is lost or compromised, use **/modify** in ${channel.mention} immediately.\n" +
                                 "This message will be automatically deleted in 1 minute for privacy and security.")
-                        }.flatMap { channel.createMessage(MessageCreateSpec().setEmbed(it)) }
-                    }.delayElement(Duration.ofMinutes(1))
+                        }.zipWith(author.privateChannel)
+
+                    }.flatMap { (spec, channel) -> channel.createMessage(MessageCreateSpec().setEmbed(spec)) }
+                    .delayElement(Duration.ofMinutes(1))
                     .flatMap(Message::delete)
             }.then()
     }
