@@ -24,8 +24,9 @@ interface NeonCommand : Command {
     val aliases: Set<String>
 
     fun getArguments(content: String): List<String> {
-        return content.split(" ") // Drop prefix until alias hits
-            .dropWhile { prefix -> aliases.none(prefix::equals) }
-            .drop(1)
+        return content.split(" ").dropWhile { prefix ->
+            // Use contains for any embedded prefixes
+            aliases.none { prefix.contains(it) }
+        }.drop(1)
     }
 }

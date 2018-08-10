@@ -16,14 +16,36 @@
  */
 package technology.yockto.neon.util
 
+import discord4j.core.`object`.util.Image.Format.PNG
+import discord4j.core.event.domain.message.MessageCreateEvent
+import discord4j.core.spec.EmbedCreateSpec
+import reactor.core.publisher.Mono
+import reactor.util.function.component1
+import reactor.util.function.component2
 import technology.yockto.neon.web.rest.channel.EventRequest
 import java.math.RoundingMode.HALF_UP
+import java.time.Instant
 
 @Suppress("KDocMissingDocumentation")
 fun Double.round(scale: Int): Double = toBigDecimal().setScale(scale, HALF_UP).toDouble()
 
 @Suppress("KDocMissingDocumentation")
 fun EventRequest.format(raw: String): String = format(raw, "", payload)
+
+@Suppress("KDocMissingDocumentation")
+fun MessageCreateEvent.createEmbed(spec: (EmbedCreateSpec) -> Unit): Mono<EmbedCreateSpec> {
+    return Mono.zip(message.author, message.client.self).map { (author, self) ->
+        val authorAvatarUrl = author.getAvatarUrl(PNG).orElse(author.defaultAvatarUrl)
+        val selfAvatarUrl = self.getAvatarUrl(PNG).orElse(self.defaultAvatarUrl)
+        val embedCreateSpec = EmbedCreateSpec()
+
+        embedCreateSpec.setAuthor("${self.username}#${self.discriminator}", null, selfAvatarUrl)
+        embedCreateSpec.setFooter("${author.username}#${author.discriminator}", authorAvatarUrl)
+        embedCreateSpec.setThumbnail(selfAvatarUrl)
+        embedCreateSpec.setTimestamp(Instant.now())
+        embedCreateSpec.apply(spec::invoke)
+    }
+}
 
 @Suppress("UNCHECKED_CAST")
 private fun format(raw: String, prefix: String, dictionary: Map<String, Any>): String {

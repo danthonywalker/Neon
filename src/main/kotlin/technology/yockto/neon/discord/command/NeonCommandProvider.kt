@@ -51,6 +51,7 @@ class NeonCommandProvider @Autowired constructor(
             .map(Snowflake::asBigInteger)
             .flatMap(guildRepository::findById)
             .flatMapIterable(GuildDocument::prefixes)
+            .switchIfEmpty(Mono.just("/"))
             .filter { context.message.content.get().startsWith(it) }
             .next()
             .map { Pair(it, context.message.content.get().replaceFirst(it, "")) }
