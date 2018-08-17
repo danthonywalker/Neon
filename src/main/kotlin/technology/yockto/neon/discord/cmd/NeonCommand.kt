@@ -14,9 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.game
+package technology.yockto.neon.discord.cmd
+
+import discord4j.command.Command
 
 @Suppress("KDocMissingDocumentation")
-enum class GameType(val alias: String) {
-    TEAM_FORTRESS_2("Team Fortress 2")
+interface NeonCommand : Command<List<String>> {
+
+    val helpDescription: String
+    val helpTitle: String
+
+    val names: Set<String>
+    val parent: NeonCommand?
 }

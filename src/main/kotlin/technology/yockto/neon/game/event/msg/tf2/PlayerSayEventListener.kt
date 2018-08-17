@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.db.document
+package technology.yockto.neon.game.event.msg.tf2
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.Document
-import java.math.BigInteger
+import org.springframework.stereotype.Component
+import technology.yockto.neon.db.document.ChannelDocument
+import technology.yockto.neon.game.GameType.TEAM_FORTRESS_2
+import technology.yockto.neon.game.event.msg.AbstractMessageEventListener
 
-@Document(collection = "guild")
+@Component
 @Suppress("KDocMissingDocumentation")
-data class GuildDocument(
-    @Id val id: BigInteger,
-    val prefixes: List<String> = listOf("/")
-)
+class PlayerSayEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "PLAYER_SAY") {
+
+    override fun getRawString(u: ChannelDocument): String? = u.teamFortress2.playerSay
+}

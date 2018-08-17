@@ -19,21 +19,27 @@ package technology.yockto.neon.web
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.security.authorization.AuthorizationDecision
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.crypto.password.NoOpPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.web.reactive.config.EnableWebFlux
 import reactor.core.publisher.Mono
 import technology.yockto.neon.db.document.ChannelDocument
 import technology.yockto.neon.db.repository.ChannelRepository
 import java.security.Principal
 import java.util.UUID
 
+@EnableWebFlux
 @EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 @Suppress("KDocMissingDocumentation")
-class WebFluxSecurity @Autowired constructor(
+class WebFluxConfiguration @Autowired constructor(
     private val channelRepository: ChannelRepository
 ) : ReactiveUserDetailsService {
 
@@ -42,7 +48,7 @@ class WebFluxSecurity @Autowired constructor(
             .flatMap(channelRepository::findById)
             .map(ChannelDocument::password)
             .map(UUID::toString)
-            // TODO Users must have a role so possibly explore uses for custom roles
+            // TODO User must have a role so possibly explore uses for custom roles
             .map { User.withUsername(username).password(it).roles("USER").build() }
     }
 
@@ -60,4 +66,8 @@ class WebFluxSecurity @Autowired constructor(
             // Deny all other requests and enable Basic Authorization
             .anyExchange().denyAll().and().httpBasic().and().build()
     }
+
+    @Bean
+    @Suppress("DEPRECATION")
+    fun getPasswordEncoder(): PasswordEncoder = NoOpPasswordEncoder.getInstance()
 }

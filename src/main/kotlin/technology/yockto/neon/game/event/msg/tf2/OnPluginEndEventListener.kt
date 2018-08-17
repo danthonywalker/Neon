@@ -14,19 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.discord.command
+package technology.yockto.neon.game.event.msg.tf2
 
-import discord4j.command.Command
+import org.springframework.stereotype.Component
+import technology.yockto.neon.db.document.ChannelDocument
+import technology.yockto.neon.game.GameType.TEAM_FORTRESS_2
+import technology.yockto.neon.game.event.msg.AbstractMessageEventListener
 
+@Component
 @Suppress("KDocMissingDocumentation")
-interface NeonCommand : Command {
+class OnPluginEndEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "ON_PLUGIN_END") {
 
-    val aliases: Set<String>
-
-    fun getArguments(content: String): List<String> {
-        return content.split(" ").dropWhile { prefix ->
-            // Use contains for any embedded prefixes
-            aliases.none { prefix.contains(it) }
-        }.drop(1)
-    }
+    override fun getRawString(u: ChannelDocument): String? = u.teamFortress2.onPluginEnd
 }

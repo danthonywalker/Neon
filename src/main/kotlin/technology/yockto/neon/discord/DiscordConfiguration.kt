@@ -17,6 +17,7 @@
 package technology.yockto.neon.discord
 
 import discord4j.command.CommandBootstrapper
+import discord4j.command.CommandDispatcher
 import discord4j.command.CommandProvider
 import discord4j.core.DiscordClient
 import discord4j.core.DiscordClientBuilder
@@ -24,7 +25,6 @@ import discord4j.core.event.domain.Event
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import reactor.util.Logger
 import reactor.util.Loggers
 import technology.yockto.neon.discord.event.EventListener
 import java.util.stream.IntStream
@@ -34,34 +34,31 @@ import kotlin.streams.toList
 @Suppress("KDocMissingDocumentation")
 class DiscordConfiguration {
 
-    @Bean
+    @Suppress("UNCHECKED_CAST")
+    @Bean("discordClients")
     fun getDiscordClients(
-        @Value("\${DISCORD_SHARD_COUNT:1}") discordShardCount: Int,
-        @Value("\${DISCORD_TOKEN}") discordToken: String,
+        @Value("\${NEON_DISCORD_SHARD_COUNT:1}") discordShardCount: Int,
+        @Value("\${NEON_DISCORD_TOKEN}") discordToken: String,
+        commandProviders: List<CommandProvider<*>>,
         eventListeners: List<EventListener<*>>,
-        commandProvider: CommandProvider
+        commandDispatcher: CommandDispatcher
     ): Iterable<DiscordClient> {
 
         val logger = Loggers.getLogger(DiscordConfiguration::class.java)
-        fun Logger.consumeError(error: Throwable, value: Any?) = warn(value.toString(), error)
-
-        @Suppress("UNCHECKED_CAST")
         fun DiscordClient.registerEventListeners() = eventListeners.map { it as EventListener<Event> }.forEach {
-            eventDispatcher.on(it.eventType).flatMap(it::apply).onErrorContinue(logger::consumeError).subscribe()
+            eventDispatcher.on(it.eventType).flatMap(it).onErrorContinue { error, value: Any? ->
+                logger.warn(value.toString(), error)
+            }.subscribe()
         }
 
+        val commandBootstrapper = CommandBootstrapper(commandDispatcher).addProviders(commandProviders)
         val discordClientBuilder = DiscordClientBuilder(discordToken).setShardCount(discordShardCount)
-        val commandBootstrapper = CommandBootstrapper().addCommandProvider(commandProvider)
-
-        fun DiscordClient.attachCommandBootstrapper() { // Prevent EventDispatcher error death
-            commandBootstrapper.attach(this).onErrorContinue(logger::consumeError).subscribe()
-        }
 
         return IntStream.range(0, discordShardCount)
             .mapToObj(discordClientBuilder::setShardIndex)
             .map(DiscordClientBuilder::build)
             .peek(DiscordClient::registerEventListeners)
-            .peek(DiscordClient::attachCommandBootstrapper)
+            .peek { commandBootstrapper.attach(it).subscribe() }
             .peek { it.login().subscribe() }
             .toList()
     }

@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.game
+package technology.yockto.neon.util
 
 @Suppress("KDocMissingDocumentation")
-enum class GameType(val alias: String) {
-    TEAM_FORTRESS_2("Team Fortress 2")
-}
+data class Node<T>(val data: T, val parent: Node<T>? = null, val children: List<Node<T>> = emptyList())

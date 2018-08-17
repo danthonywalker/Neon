@@ -14,28 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.game.checkpoint
+package technology.yockto.neon.game.checkpoint.tf2
 
 import discord4j.core.`object`.entity.Member
 import discord4j.core.event.domain.message.MessageCreateEvent
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import technology.yockto.neon.db.document.ChannelDocument
-import technology.yockto.neon.web.rest.channel.CheckpointResponse
+import technology.yockto.neon.game.GameType.TEAM_FORTRESS_2
+import technology.yockto.neon.game.checkpoint.AbstractCheckpointEventListener
 import java.math.BigInteger
 
 @Component
 @Suppress("KDocMissingDocumentation")
-class AllMessagesCheckpoint : CheckpointEventListener<MessageCreateEvent>() {
+class AllMessageCheckpoint : AbstractCheckpointEventListener<MessageCreateEvent>(TEAM_FORTRESS_2, "ALL_MESSAGES") {
 
-    override fun getPayload(event: MessageCreateEvent, channelDocument: ChannelDocument): Mono<CheckpointResponse> {
-        // TODO Change by gameType and allow total customization of the payload utilizing channelDocument and event
+    override fun getPayload(event: MessageCreateEvent, channelDocument: ChannelDocument): Mono<Any> {
+        // TODO Allow customization of the sending message by utilizing channelDocument and the event
 
         return Mono.justOrEmpty(event.member)
             .map(Member::getDisplayName)
             .zipWith(Mono.justOrEmpty(event.message.content))
             .map { "{orange}[DSM] {green}${it.t1}{normal}: ${it.t2}" }
-            .map { CheckpointResponse("ALL_MESSAGES", it) }
     }
 
     override fun getChannelId(event: MessageCreateEvent): BigInteger = event.message.channelId.asBigInteger()

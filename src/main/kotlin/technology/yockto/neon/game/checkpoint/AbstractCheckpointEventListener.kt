@@ -24,13 +24,16 @@ import reactor.core.publisher.Mono
 import technology.yockto.neon.db.document.ChannelDocument
 import technology.yockto.neon.db.repository.ChannelRepository
 import technology.yockto.neon.discord.event.EventListener
-import technology.yockto.neon.game.GameType.UNSPECIFIED
+import technology.yockto.neon.game.GameType
 import technology.yockto.neon.web.rest.channel.CheckpointResponse
 import java.math.BigInteger
 import java.util.Queue
 
 @Suppress("KDocMissingDocumentation")
-abstract class CheckpointEventListener<T : Event> : EventListener<T> {
+abstract class AbstractCheckpointEventListener<T : Event>(
+    private val gameType: GameType,
+    private val type: String
+) : EventListener<T> {
 
     @Autowired
     private lateinit var channelRepository: ChannelRepository
@@ -46,11 +49,12 @@ abstract class CheckpointEventListener<T : Event> : EventListener<T> {
         return Mono.just(channelId)
             .filter(queues::containsKey)
             .flatMap(channelRepository::findById)
-            .filter { it.gameType != UNSPECIFIED }
+            .filter { (it.gameType == gameType) }
             .flatMap { getPayload(t, it) }
+            .map { CheckpointResponse(type, it) }
             .doOnNext { queues[channelId]?.offer(it) }
     }
 
-    protected abstract fun getPayload(event: T, channelDocument: ChannelDocument): Mono<CheckpointResponse>
+    protected abstract fun getPayload(event: T, channelDocument: ChannelDocument): Mono<Any>
     protected abstract fun getChannelId(event: T): BigInteger
 }

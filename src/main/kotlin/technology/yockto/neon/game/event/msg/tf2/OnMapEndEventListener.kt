@@ -14,11 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.db.repository
+package technology.yockto.neon.game.event.msg.tf2
 
-import org.springframework.data.repository.reactive.ReactiveCrudRepository
-import technology.yockto.neon.db.document.GuildDocument
-import java.math.BigInteger
+import org.springframework.stereotype.Component
+import technology.yockto.neon.db.document.ChannelDocument
+import technology.yockto.neon.game.GameType.TEAM_FORTRESS_2
+import technology.yockto.neon.game.event.msg.AbstractMessageEventListener
 
+@Component
 @Suppress("KDocMissingDocumentation")
-interface GuildRepository : ReactiveCrudRepository<GuildDocument, BigInteger>
+class OnMapEndEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "ON_MAP_END") {
+
+    override fun getRawString(u: ChannelDocument): String? = u.teamFortress2.onMapEnd
+}

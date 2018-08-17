@@ -14,26 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.discord.event
+package technology.yockto.neon.discord.cmd
 
-import discord4j.core.event.domain.guild.GuildCreateEvent
+import discord4j.command.util.AbstractCommandDispatcher
+import discord4j.core.event.domain.message.MessageCreateEvent
 import org.reactivestreams.Publisher
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
-import technology.yockto.neon.db.document.GuildDocument
-import technology.yockto.neon.db.repository.GuildRepository
 
 @Component
 @Suppress("KDocMissingDocumentation")
-class GuildCreateDatabaseEventListener @Autowired constructor(
-    private val guildRepository: GuildRepository
-) : EventListener<GuildCreateEvent> {
+class NeonCommandDispatcher : AbstractCommandDispatcher() {
 
-    override fun apply(t: GuildCreateEvent): Publisher<*> {
-        return Mono.just(t.guild.id.asBigInteger())
-            .filterWhen { guildRepository.existsById(it).map(Boolean::not) }
-            .map { GuildDocument(it) } // No parameters should be configured
-            .flatMap { guildRepository.save(it) }
-    }
+    override fun getPrefixes(event: MessageCreateEvent): Publisher<String> = Mono.just("/")
 }

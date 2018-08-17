@@ -16,17 +16,13 @@
  */
 package technology.yockto.neon.game
 
-import java.math.BigInteger
-
 @Suppress("KDocMissingDocumentation")
 data class TeamFortress2(
-    val onLogActionChannelId: BigInteger? = null,
-
-    val genericOnPluginStart: String? = ":wrench: | Loaded **NeonSM** Plugin!",
-    val genericOnPluginEnd: String? = ":wrench: | Unloaded **NeonSM** Plugin!",
-    val genericOnMapStart: String? = ":map: | Started Map **\${name}**!",
-    val genericOnMapEnd: String? = ":map: | Ended Map **\${name}**!",
-    val genericOnClientConnected: String? = ":wave: | **\${name}** Connected!",
-    val genericOnClientDisconnect: String? = ":wave: | **\${name}** Disconnected!",
-    val genericPlayerSay: String? = ":speech_balloon: | **\${client.name}**: \${text}"
+    val onPluginStart: String? = ":wrench: | Loaded **NeonSM** Plugin!",
+    val onPluginEnd: String? = ":wrench: | Unloaded **NeonSM** Plugin!",
+    val onMapStart: String? = ":map: | Started Map **\${name}**!",
+    val onMapEnd: String? = ":map: | Ended Map **\${name}**!",
+    val onClientConnected: String? = ":wave: | **\${name}** Connected!",
+    val onClientDisconnect: String? = ":wave: | **\${name}** Disconnected!",
+    val playerSay: String? = ":speech_balloon: | **\${client.name}**: \${text}"
 )

@@ -4,6 +4,8 @@ pipeline:
     pull: true
     commands:
       - mvn package
+    volumes:
+      - /tmp/.m2:/root/.m2
 
   release:
     image: plugins/docker

@@ -14,9 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Neon.  If not, see <https://www.gnu.org/licenses/>.
  */
-package technology.yockto.neon.game
+package technology.yockto.neon.game.event.msg.tf2
 
+import org.springframework.stereotype.Component
+import technology.yockto.neon.db.document.ChannelDocument
+import technology.yockto.neon.game.GameType.TEAM_FORTRESS_2
+import technology.yockto.neon.game.event.msg.AbstractMessageEventListener
+
+@Component
 @Suppress("KDocMissingDocumentation")
-enum class GameType(val alias: String) {
-    TEAM_FORTRESS_2("Team Fortress 2")
+class OnClientDisconnectEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "ON_CLIENT_DISCONNECT") {
+
+    override fun getRawString(u: ChannelDocument): String? = u.teamFortress2.onClientDisconnect
 }

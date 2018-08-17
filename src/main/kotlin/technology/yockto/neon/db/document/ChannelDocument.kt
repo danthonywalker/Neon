@@ -19,18 +19,17 @@ package technology.yockto.neon.db.document
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import technology.yockto.neon.game.GameType
-import technology.yockto.neon.game.GameType.UNSPECIFIED
 import technology.yockto.neon.game.TeamFortress2
 import java.math.BigInteger
 import java.util.UUID
 
-@Document(collection = "channel")
+@Document("channels")
 @Suppress("KDocMissingDocumentation")
 data class ChannelDocument(
     @Id val id: BigInteger,
-    val owner: BigInteger,
-    val password: UUID = UUID.randomUUID(),
+    val password: UUID,
+    val ownerId: BigInteger,
+    val gameType: GameType,
 
-    val gameType: GameType = UNSPECIFIED,
     val teamFortress2: TeamFortress2 = TeamFortress2()
 )

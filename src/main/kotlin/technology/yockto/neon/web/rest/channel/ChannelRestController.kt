@@ -47,8 +47,8 @@ class ChannelRestController @Autowired constructor(
     private val privateQueues = ConcurrentHashMap<BigInteger, Queue<CheckpointResponse>>()
     val queues: Map<BigInteger, Queue<CheckpointResponse>> @Bean("queues") get() = privateQueues
 
-    @PostMapping("/checkpoint")
-    fun postCheckpoint(@PathVariable("id") id: BigInteger): Flux<CheckpointResponse> {
+    @PostMapping("/checkpoints")
+    fun postCheckpoints(@PathVariable("id") id: BigInteger): Flux<CheckpointResponse> {
         val queue = privateQueues.computeIfAbsent(id) { LinkedBlockingQueue() }
         val currentTime = Instant.now() // Sets the time to remove mapped queue
         val checkpoint = currentTime.plusMillis(queueTimeout.toLong())
@@ -71,10 +71,12 @@ class ChannelRestController @Autowired constructor(
     }
 
     @PostMapping("/events")
-    fun postEvent(@PathVariable("id") id: BigInteger, request: EventRequest): Mono<Void> {
+    fun postEvents(@PathVariable("id") id: BigInteger, request: EventRequest): Mono<Void> {
         val executors: (ChannelDocument) -> Flux<*> = { channelDocument ->
-            Flux.fromIterable(eventListeners) // Ordering is not required
-                .flatMap { it.execute(request, channelDocument) }
+            Flux.fromIterable(eventListeners)
+                .filter { (it.gameType == channelDocument.gameType) }
+                .filter { (it.eventType == request.type) }
+                .flatMap { it.apply(request, channelDocument) }
         }
 
         return Mono.just(id)

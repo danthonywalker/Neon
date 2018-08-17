@@ -17,4 +17,4 @@
 package technology.yockto.neon.web.rest.channel
 
 @Suppress("KDocMissingDocumentation")
-data class EventRequest(val type: String, val payload: Map<String, Any>)
+data class EventRequest(val type: String, val payload: Map<String, Any?>)

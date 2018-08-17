@@ -18,9 +18,12 @@ package technology.yockto.neon.web.rest.channel
 
 import org.reactivestreams.Publisher
 import technology.yockto.neon.db.document.ChannelDocument
+import technology.yockto.neon.game.GameType
+import java.util.function.BiFunction
 
 @Suppress("KDocMissingDocumentation")
-interface EventListener {
+interface EventListener : BiFunction<EventRequest, ChannelDocument, Publisher<*>> {
 
-    fun execute(request: EventRequest, channelDocument: ChannelDocument): Publisher<*>
+    val gameType: GameType
+    val eventType: String
 }

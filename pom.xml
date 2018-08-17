@@ -92,7 +92,7 @@
         <dependency>
             <groupId>com.discord4j.discord4j</groupId>
             <artifactId>discord4j-command</artifactId>
-            <version>0ebc740dbc</version>
+            <version>16aef36b25</version>
         </dependency>
     </dependencies>
 
@@ -118,7 +118,6 @@
                     <args>
                         <arg>-Xjsr305=strict</arg>
                     </args>
-
                     <compilerPlugins>
                         <plugin>spring</plugin>
                     </compilerPlugins>
