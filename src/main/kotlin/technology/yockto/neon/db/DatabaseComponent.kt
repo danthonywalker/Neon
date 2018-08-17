@@ -16,20 +16,10 @@
  */
 package technology.yockto.neon.db
 
-import com.mongodb.reactivestreams.client.MongoClient
-import com.mongodb.reactivestreams.client.MongoClients
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
+import org.springframework.stereotype.Component
 
+@Component
 @EnableReactiveMongoRepositories
 @Suppress("KDocMissingDocumentation")
-class DatabaseConfiguration @Autowired constructor(
-    @Value("\${NEON_MONGODB_USERNAME}") private val username: String,
-    @Value("\${NEON_MONGODB_PASSWORD}") private val password: String
-) : AbstractReactiveMongoConfiguration() {
-
-    override fun reactiveMongoClient(): MongoClient = MongoClients.create("mongodb://$username:$password@mongo")
-    override fun getDatabaseName(): String = "neon"
-}
+class DatabaseComponent
