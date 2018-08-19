@@ -28,7 +28,6 @@ import java.util.UUID
 data class ChannelDocument(
     @Id val id: BigInteger,
     val password: UUID,
-    val ownerId: BigInteger,
     val gameType: GameType,
 
     val teamFortress2: TeamFortress2 = TeamFortress2()

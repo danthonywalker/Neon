@@ -74,8 +74,7 @@ class CreateLinkCommand @Autowired constructor(
             .flatMap { (event, gameType) ->
                 val password = UUID.randomUUID()
                 val id = event.message.channelId.asBigInteger()
-                val ownerId = event.message.authorId.get().asBigInteger()
-                channelRepository.save(ChannelDocument(id, password, ownerId, gameType!!))
+                channelRepository.save(ChannelDocument(id, password, gameType!!))
                     .map { Base64.getEncoder().encodeToString("${it.id}:${it.password}".toByteArray()) }
                     .zipWith(event.message.channel.cast(TextChannel::class.java))
                     .flatMap { (token, channel) ->
