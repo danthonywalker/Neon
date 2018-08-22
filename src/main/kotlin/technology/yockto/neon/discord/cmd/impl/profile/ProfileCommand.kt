@@ -64,9 +64,9 @@ class ProfileCommand @Autowired constructor(
 
                         val memberAvatarUrl = member.getAvatarUrl(PNG).orElse(member.defaultAvatarUrl)
                         val document = pair.second.firstOrNull { it.id == pair.first } ?: MemberDocument(pair.first)
-                        val topCurrent = pair.second.sortedBy { it.totalCredits - it.spentCredits }
-                        val topTotal = pair.second.sortedBy(MemberDocument::totalCredits)
-                        val topSpent = pair.second.sortedBy(MemberDocument::spentCredits)
+                        val topCurrent = pair.second.sortedByDescending { it.totalCredits - it.spentCredits }
+                        val topTotal = pair.second.sortedByDescending(MemberDocument::totalCredits)
+                        val topSpent = pair.second.sortedByDescending(MemberDocument::spentCredits)
 
                         val current = "(#${topCurrent.indexOf(document).takeUnless { it == -1 } ?: 0})"
                         spec.addField("Credits", "${document.totalCredits - document.spentCredits} $current", true)
