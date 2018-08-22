@@ -16,9 +16,16 @@
  */
 package technology.yockto.neon.db.repository
 
+import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
+import reactor.core.publisher.Flux
 import technology.yockto.neon.db.document.MemberDocument
 import technology.yockto.neon.util.MemberId
+import java.math.BigInteger
 
 @Suppress("KDocMissingDocumentation")
-interface MemberRepository : ReactiveCrudRepository<MemberDocument, MemberId>
+interface MemberRepository : ReactiveCrudRepository<MemberDocument, MemberId> {
+
+    @Query("{ '_id.guildId' : ?0 }")
+    fun findAllByGuildId(guildId: BigInteger): Flux<MemberDocument>
+}
