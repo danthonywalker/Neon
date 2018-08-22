@@ -67,13 +67,13 @@ class ProfileCommand @Autowired constructor(
                         val topCurrent = pair.second.sortedByDescending { it.totalCredits - it.spentCredits }
                         val topTotal = pair.second.sortedByDescending(MemberDocument::totalCredits)
                         val topSpent = pair.second.sortedByDescending(MemberDocument::spentCredits)
+                        val earned = "${document.totalCredits} (#${topTotal.indexOf(document) + 1})"
+                        val spent = "${document.spentCredits} (#${topSpent.indexOf(document) + 1})"
+                        val current = "(#${topCurrent.indexOf(document) + 1})"
 
-                        val current = "(#${topCurrent.indexOf(document).takeUnless { it == -1 } ?: 0})"
                         spec.addField("Credits", "${document.totalCredits - document.spentCredits} $current", true)
-                        val earned = "(#${topTotal.indexOf(document).takeUnless { it == -1 } ?: 0})"
-                        spec.addField("Total Credits Earned", "${document.totalCredits} $earned", true)
-                        val spent = "(#${topSpent.indexOf(document).takeUnless { it == -1 } ?: 0})"
-                        spec.addField("Total Credits Spent", "${document.spentCredits} $spent", true)
+                        spec.addField("Total Credits Earned", earned, true)
+                        spec.addField("Total Credits Spent", spent, true)
 
                         spec.setAuthor("${member.displayName}#${member.discriminator}", null, memberAvatarUrl)
                         spec.setThumbnail(memberAvatarUrl)
