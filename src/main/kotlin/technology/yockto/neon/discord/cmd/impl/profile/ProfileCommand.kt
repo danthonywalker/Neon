@@ -72,8 +72,8 @@ class ProfileCommand @Autowired constructor(
                         val current = "(#${topCurrent.indexOf(document) + 1})"
 
                         spec.addField("Credits", "${document.totalCredits - document.spentCredits} $current", true)
-                        spec.addField("Total Credits Earned", earned, true)
-                        spec.addField("Total Credits Spent", spent, true)
+                        spec.addField("Credits Earned", earned, true)
+                        spec.addField("Credits Spent", spent, true)
 
                         spec.setAuthor("${member.displayName}#${member.discriminator}", null, memberAvatarUrl)
                         spec.setThumbnail(memberAvatarUrl)
