@@ -63,8 +63,8 @@ class WebFluxConfiguration @Autowired constructor(
                     .map(::AuthorizationDecision)
             }
 
-            // Deny all other requests and enable Basic Authorization
-            .anyExchange().denyAll().and().httpBasic().and().build()
+            // Deny all other requests, disable browser login, and enable Authorization Basic through HTTP
+            .anyExchange().denyAll().and().formLogin().disable().csrf().disable().httpBasic().and().build()
     }
 
     @Bean
