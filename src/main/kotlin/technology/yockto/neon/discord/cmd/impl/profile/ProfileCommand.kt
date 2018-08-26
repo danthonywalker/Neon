@@ -64,14 +64,14 @@ class ProfileCommand @Autowired constructor(
 
                         val memberAvatarUrl = member.getAvatarUrl(PNG).orElse(member.defaultAvatarUrl)
                         val document = pair.second.firstOrNull { it.id == pair.first } ?: MemberDocument(pair.first)
-                        val topCurrent = pair.second.sortedByDescending { it.totalCredits - it.spentCredits }
-                        val topTotal = pair.second.sortedByDescending(MemberDocument::totalCredits)
-                        val topSpent = pair.second.sortedByDescending(MemberDocument::spentCredits)
-                        val earned = "${document.totalCredits} (#${topTotal.indexOf(document) + 1})"
-                        val spent = "${document.spentCredits} (#${topSpent.indexOf(document) + 1})"
+                        val topCurrent = pair.second.sortedByDescending { it.creditsEarned - it.creditsSpent }
+                        val topEarned = pair.second.sortedByDescending(MemberDocument::creditsEarned)
+                        val topSpent = pair.second.sortedByDescending(MemberDocument::creditsSpent)
+                        val earned = "${document.creditsEarned} (#${topEarned.indexOf(document) + 1})"
+                        val spent = "${document.creditsSpent} (#${topSpent.indexOf(document) + 1})"
                         val current = "(#${topCurrent.indexOf(document) + 1})"
 
-                        spec.addField("Credits", "${document.totalCredits - document.spentCredits} $current", true)
+                        spec.addField("Credits", "${document.creditsEarned - document.creditsSpent} $current", true)
                         spec.addField("Credits Earned", earned, true)
                         spec.addField("Credits Spent", spent, true)
 

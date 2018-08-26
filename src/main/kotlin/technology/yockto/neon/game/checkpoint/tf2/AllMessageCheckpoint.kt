@@ -33,6 +33,7 @@ class AllMessageCheckpoint : AbstractCheckpointEventListener<MessageCreateEvent>
         // TODO Allow customization of the sending message by utilizing channelDocument and the event
 
         return Mono.justOrEmpty(event.member)
+            .filter { !it.isBot }
             .map(Member::getDisplayName)
             .zipWith(Mono.justOrEmpty(event.message.content))
             .map { "{orange}[DSM] {green}${it.t1}{normal}: ${it.t2}" }

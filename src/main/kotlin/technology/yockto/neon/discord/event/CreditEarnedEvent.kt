@@ -44,14 +44,14 @@ class CreditEarnedEvent @Autowired constructor(
             .flatMap { credits ->
 
                 memberRepository.findAllById(credits.keys)
-                    .map { it.copy(totalCredits = it.totalCredits + credits[it.id]!!.get()) }
+                    .map { it.copy(creditsEarned = it.creditsEarned + credits[it.id]!!.get()) }
                     .transform { memberRepository.saveAll(it) }
                     .map(MemberDocument::id)
                     .collectList()
                     .map { Pair(credits.keys.toMutableList(), it) }
                     .doOnNext { (keys, processed) -> keys.removeAll(processed) }
                     .flatMapIterable(Pair<Iterable<MemberId>, *>::first)
-                    .map { MemberDocument(it, totalCredits = credits[it]!!.toLong()) }
+                    .map { MemberDocument(it, creditsEarned = credits[it]!!.toLong()) }
                     .transform { memberRepository.saveAll(it) }
             }.subscribe()
     }

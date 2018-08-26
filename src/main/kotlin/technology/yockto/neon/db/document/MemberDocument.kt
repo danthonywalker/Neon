@@ -24,6 +24,6 @@ import technology.yockto.neon.util.MemberId
 @Suppress("KDocMissingDocumentation")
 data class MemberDocument(
     @Id val id: MemberId,
-    val totalCredits: Long = 0,
-    val spentCredits: Long = 0
+    val creditsEarned: Long = 0,
+    val creditsSpent: Long = 0
 )
