@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
@@ -71,7 +72,7 @@ class ChannelRestController @Autowired constructor(
     }
 
     @PostMapping("/events")
-    fun postEvents(@PathVariable("id") id: BigInteger, request: EventRequest): Mono<Void> {
+    fun postEvents(@PathVariable("id") id: BigInteger, @RequestBody request: EventRequest): Mono<Void> {
         val executors: (ChannelDocument) -> Flux<*> = { channelDocument ->
             Flux.fromIterable(eventListeners)
                 .filter { (it.gameType == channelDocument.gameType) }
@@ -80,7 +81,6 @@ class ChannelRestController @Autowired constructor(
         }
 
         return Mono.just(id)
-            .filter(queues::containsKey)
             .flatMap(channelRepository::findById)
             .flatMapMany(executors)
             .then()

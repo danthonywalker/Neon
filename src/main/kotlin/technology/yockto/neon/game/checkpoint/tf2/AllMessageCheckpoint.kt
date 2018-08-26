@@ -36,7 +36,7 @@ class AllMessageCheckpoint : AbstractCheckpointEventListener<MessageCreateEvent>
             .filter { !it.isBot }
             .map(Member::getDisplayName)
             .zipWith(Mono.justOrEmpty(event.message.content))
-            .map { "{orange}[DSM] {green}${it.t1}{normal}: ${it.t2}" }
+            .map { "{orange}[Neon] {green}${it.t1}{normal}: ${it.t2}" }
     }
 
     override fun getChannelId(event: MessageCreateEvent): BigInteger = event.message.channelId.asBigInteger()
