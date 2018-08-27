@@ -23,7 +23,7 @@ import technology.yockto.neon.game.event.msg.AbstractMessageEventListener
 
 @Component
 @Suppress("KDocMissingDocumentation")
-class OnClientDisconnectEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "ON_CLIENT_DISCONNECT") {
+class PlayerDisconnectEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "PLAYER_DISCONNECT") {
 
-    override fun getRawString(u: ChannelDocument): String? = u.teamFortress2.onClientDisconnect
+    override fun getRawString(u: ChannelDocument): String? = u.teamFortress2.playerDisconnect
 }

@@ -22,7 +22,7 @@ data class TeamFortress2(
     val onPluginEnd: String? = ":wrench: | Unloaded **NeonSM** Plugin!",
     val onMapStart: String? = ":map: | Started Map **\${name}**!",
     val onMapEnd: String? = ":map: | Ended Map **\${name}**!",
-    val onClientConnected: String? = ":wave: | **\${name}** Connected!",
-    val onClientDisconnect: String? = ":wave: | **\${name}** Disconnected!",
-    val playerSay: String? = ":speech_balloon: | **\${client.name}**: \${text}"
+    val playerSay: String? = ":speech_balloon: | **\${client.name}**: \${text}",
+    val playerConnect: String? = ":wave: | **\${name}** Connected!",
+    val playerDisconnect: String? = ":wave: | **\${name}** Disconnected!"
 )
