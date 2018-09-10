@@ -23,7 +23,7 @@ import technology.yockto.neon.game.event.msg.AbstractMessageEventListener
 
 @Component
 @Suppress("KDocMissingDocumentation")
-class OnMapStartEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "ON_MAP_START") {
+class OnMapStartEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "NEONSM_ON_MAP_START") {
 
     override fun getRawString(u: ChannelDocument): String? = u.teamFortress2.onMapStart
 }

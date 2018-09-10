@@ -23,7 +23,7 @@ import technology.yockto.neon.game.event.msg.AbstractMessageEventListener
 
 @Component
 @Suppress("KDocMissingDocumentation")
-class PlayerSayEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "PLAYER_SAY") {
+class PlayerSayEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "NEONSM_PLAYER_SAY") {
 
     override fun getRawString(u: ChannelDocument): String? = u.teamFortress2.playerSay
 }

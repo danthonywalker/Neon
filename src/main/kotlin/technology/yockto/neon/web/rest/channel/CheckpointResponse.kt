@@ -17,4 +17,4 @@
 package technology.yockto.neon.web.rest.channel
 
 @Suppress("KDocMissingDocumentation")
-data class CheckpointResponse(val type: String, val payload: Any)
+data class CheckpointResponse(val type: String, val payload: Map<String, Any?>)

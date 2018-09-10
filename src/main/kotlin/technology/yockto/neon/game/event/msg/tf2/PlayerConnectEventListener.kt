@@ -23,7 +23,7 @@ import technology.yockto.neon.game.event.msg.AbstractMessageEventListener
 
 @Component
 @Suppress("KDocMissingDocumentation")
-class PlayerConnectEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "PLAYER_CONNECT") {
+class PlayerConnectEventListener : AbstractMessageEventListener(TEAM_FORTRESS_2, "NEONSM_PLAYER_CONNECT") {
 
     override fun getRawString(u: ChannelDocument): String? = u.teamFortress2.playerConnect
 }

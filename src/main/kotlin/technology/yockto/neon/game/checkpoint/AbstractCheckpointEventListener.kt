@@ -16,6 +16,7 @@
  */
 package technology.yockto.neon.game.checkpoint
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import discord4j.core.event.domain.Event
 import org.reactivestreams.Publisher
 import org.springframework.beans.factory.BeanFactory
@@ -41,6 +42,10 @@ abstract class AbstractCheckpointEventListener<T : Event>(
     @Autowired
     private lateinit var beanFactory: BeanFactory
 
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
+
+    @Suppress("UNCHECKED_CAST")
     final override fun apply(t: T): Publisher<*> {
         @Suppress("UNCHECKED_CAST") // This is needed because of a circular bean dependency chain
         val queues = beanFactory.getBean("queues") as Map<BigInteger, Queue<CheckpointResponse>>
@@ -51,7 +56,8 @@ abstract class AbstractCheckpointEventListener<T : Event>(
             .flatMap(channelRepository::findById)
             .filter { (it.gameType == gameType) }
             .flatMap { getPayload(t, it) }
-            .map { CheckpointResponse(type, it) }
+            .map { objectMapper.convertValue(it, Map::class.java) }
+            .map { CheckpointResponse(type, it as Map<String, Any?>) }
             .doOnNext { queues[channelId]?.offer(it) }
     }
 

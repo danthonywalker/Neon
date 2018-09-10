@@ -18,6 +18,7 @@ package technology.yockto.neon.util
 
 import discord4j.core.`object`.entity.Message
 import discord4j.core.`object`.entity.MessageChannel
+import discord4j.core.`object`.util.Image.Format.GIF
 import discord4j.core.`object`.util.Image.Format.PNG
 import discord4j.core.event.domain.message.MessageCreateEvent
 import discord4j.core.spec.EmbedCreateSpec
@@ -31,7 +32,8 @@ import java.time.Instant
 @Suppress("KDocMissingDocumentation")
 fun MessageChannel.createMessage(event: MessageCreateEvent, spec: (EmbedCreateSpec) -> Unit): Mono<Message> {
     return Mono.zip(event.message.author, event.message.client.self).map { (author, self) ->
-        val authorAvatarUrl = author.getAvatarUrl(PNG).orElse(author.defaultAvatarUrl)
+        val authorAvatarType = PNG.takeUnless { author.hasAnimatedAvatar() } ?: GIF
+        val authorAvatarUrl = author.getAvatarUrl(authorAvatarType).orElse(author.defaultAvatarUrl)
         val selfAvatarUrl = self.getAvatarUrl(PNG).orElse(self.defaultAvatarUrl)
         val embedCreateSpec = EmbedCreateSpec()
 

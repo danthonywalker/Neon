@@ -16,6 +16,7 @@
  */
 package technology.yockto.neon.discord.cmd.impl.profile
 
+import discord4j.core.`object`.util.Image.Format.GIF
 import discord4j.core.`object`.util.Image.Format.PNG
 import discord4j.core.`object`.util.Snowflake
 import discord4j.core.event.domain.message.MessageCreateEvent
@@ -62,7 +63,8 @@ class ProfileCommand @Autowired constructor(
                 event.client.getMemberById(guildId, userId).flatMap { member ->
                     channel.createMessage(event) { spec ->
 
-                        val memberAvatarUrl = member.getAvatarUrl(PNG).orElse(member.defaultAvatarUrl)
+                        val memberAvatarType = PNG.takeUnless { member.hasAnimatedAvatar() } ?: GIF
+                        val memberAvatarUrl = member.getAvatarUrl(memberAvatarType).orElse(member.defaultAvatarUrl)
                         val document = pair.second.firstOrNull { it.id == pair.first } ?: MemberDocument(pair.first)
                         val topCurrent = pair.second.sortedByDescending { it.creditsEarned - it.creditsSpent }
                         val topEarned = pair.second.sortedByDescending(MemberDocument::creditsEarned)

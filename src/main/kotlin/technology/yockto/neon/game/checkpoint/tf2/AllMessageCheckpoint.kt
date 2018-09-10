@@ -27,7 +27,7 @@ import java.math.BigInteger
 
 @Component
 @Suppress("KDocMissingDocumentation")
-class AllMessageCheckpoint : AbstractCheckpointEventListener<MessageCreateEvent>(TEAM_FORTRESS_2, "ALL_MESSAGES") {
+class AllMessageCheckpoint : AbstractCheckpointEventListener<MessageCreateEvent>(TEAM_FORTRESS_2, "NEONSM_MESSAGE") {
 
     override fun getPayload(event: MessageCreateEvent, channelDocument: ChannelDocument): Mono<Any> {
         // TODO Allow customization of the sending message by utilizing channelDocument and the event
@@ -36,8 +36,10 @@ class AllMessageCheckpoint : AbstractCheckpointEventListener<MessageCreateEvent>
             .filter { !it.isBot }
             .map(Member::getDisplayName)
             .zipWith(Mono.justOrEmpty(event.message.content))
-            .map { "{orange}[Neon] {green}${it.t1}{normal}: ${it.t2}" }
+            .map { Payload("{orange}[Discord] {green}${it.t1}{normal}: ${it.t2}") }
     }
 
     override fun getChannelId(event: MessageCreateEvent): BigInteger = event.message.channelId.asBigInteger()
+
+    private data class Payload(val message: String)
 }
