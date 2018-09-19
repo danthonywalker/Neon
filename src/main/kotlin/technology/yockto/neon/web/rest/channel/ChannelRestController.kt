@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.LinkedBlockingQueue
 
 @RestController
-@RequestMapping("/channels/{id}")
+@RequestMapping("/api/v1/channels/{id}")
 @Suppress("KDocMissingDocumentation")
 class ChannelRestController @Autowired constructor(
     @Value("\${NEON_QUEUE_TIMEOUT:10000}") private val queueTimeout: Int,

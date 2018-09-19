@@ -57,8 +57,8 @@ class WebFluxConfiguration @Autowired constructor(
         // Enables ability to authenticate and authorize incoming REST requests
         return serverHttpSecurity.authorizeExchange()
 
-            .pathMatchers("/channels/{id}/**").access { authentication, `object` ->
-                authentication.map(Principal::getName) // Checks if user is in path
+            .pathMatchers("/api/v1/channels/{id}/**").access { authentication, `object` ->
+                authentication.map(Principal::getName) // Checks if the user ID is in path
                     .map { name -> (name == `object`.variables["id"]) }
                     .map(::AuthorizationDecision)
             }
